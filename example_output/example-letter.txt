@@ -1,12 +1,12 @@
-                                                              John Doe
-                                                              42 main Street
-J. Doe, 42 main Street, 12345 Anytown                         12345 Anytown
-                                                              USA
-Maurice Moss                                                  +1 555 56789
+                                                                  John Doe
+                                                                  42 main Street
+J. Doe, 42 main Street, 12345 Anytown                             12345 Anytown
+                                                                  USA
+Maurice Moss                                                      +1 555 56789
 Reynholm Industries
-123 Carenden Road                                             Inv: 5264-234
-LONDON                                                        Me: M-288
-EC5M 8AJ                                                      You: C-1234
+123 Carenden Road                                                 Inv: 5264-234
+LONDON                                                            Me: M-288
+EC5M 8AJ                                                          You: C-1234
 GREAT BRITAIN
 
 Lorem Ipsum                                                           2022-07-18
