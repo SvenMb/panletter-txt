@@ -11,14 +11,14 @@ Letters produced for his LaTeX/pdf-Template can be reused here (without any grap
 
 To install the templates 'dinbrief.md' and 'dinover.md', either store it in 
 the working directoryor move it to the template folder in Pandoc's data directory,
-usually ~/.pandoc/templates. The wrapper script 'panletter' must be in a $PATH reachable
+usually ~/.pandoc/templates. The wrapper script 'panletter-txt' must be in a $PATH reachable
 directory or you need to call it with path.
 
 ## using the wrapper script
 
 simple call (assuming it is in PATH):
 
-    panletter example-letter.md
+    panletter-txt example-letter.md
 
 This will create a file 'example-letter.txt' with your letter.
 
@@ -26,11 +26,11 @@ This will create a file 'example-letter.txt' with your letter.
 
 With parameter --colums you can adjust the line width of your typewriter.
 
-    panletter --columns=66 example-letter.md
+    panletter-txt --columns=66 example-letter.md
 
 Parameter --page will paginate the output.
 
-    panletter --page=45 example-letter.md
+    panletter-txt --page=45 example-letter.md
 
 Adds number of page and formfeed after 44 lines (45 line is pagenumber)
 If not given the output won't be paginated.
@@ -39,21 +39,21 @@ With Parameter --tab you can set to which tabstop the tab (^I) will expand.
 This way you set the address and infos on the right side of the header inside
 the DIN letter.
 
-    panletter --tab=70 example-letter.md
+    panletter-txt --tab=70 example-letter.md
 
 Sets tabstop to the 70st col.
 
 You can also set the output file.
 
-    panletter --output=letter.txt example-letter.md
+    panletter-txt --output=letter.txt example-letter.md
 
 You can set both template files
 
-    panletter --template=dinbrief.md --overlay=dinover.md
+    panletter-txt --template=dinbrief.md --overlay=dinover.md
     
 You can see some help and the defaults via
 
-    panletter --help
+    panletter-txt --help
 
 ## Templates
 
