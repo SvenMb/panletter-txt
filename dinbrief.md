@@ -4,7 +4,7 @@
 
 $to$
 
-$subject$	        $if(date)$$date$$else$$today$$endif$
+$subject$	    $if(date)$$date$$else$$today$$endif$
 
 $opening$
 

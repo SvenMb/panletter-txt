@@ -83,7 +83,7 @@ else:
 
 # If tab is not set, use columns - 18
 if files.tab is None:
-  ovlstart = columns-18
+  ovlstart = columns-14
 else:
   ovlstart = int(files.tab)
 
