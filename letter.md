@@ -22,7 +22,7 @@ myrefname: "Me:"
 myref: M-288
 encl: |
   1. contract  
-  1. whatever 
+  1. whatever
 ...
 
 <!-- This is the actual letter content -->
