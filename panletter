@@ -1,0 +1,127 @@
+#!/usr/bin/env python
+
+import os, sys, argparse
+from datetime import date
+
+# Read input and output arguments, keeping all others as they are
+parser = argparse.ArgumentParser(prog='panletter',
+				 formatter_class=argparse.RawDescriptionHelpFormatter,
+                                 description="""
+Convert one or more markdown files to a letter in TXT format using
+the dinbrief template. For more information on using this tool and the template,
+visit
+                 https://github.com/SvenMb/pandoc-dinbrief-txt
+
+(c) Jens Erat 2014, BSD-License  (for pdf, LaTeX)
+(c) Sven Muehlberg 2022, BSD-License (for plain txt)
+
+""",
+                                 epilog='''
+All pandoc options can be used.
+
+Example: panletter -fmarkdown+pipe_tables input-letter.md 
+
+This example will enable the pandoc extension pipe_tables and allow to
+include tables in the letter.
+
+Beware that there is no space allowed between the pandoc option switch
+(here -f) and the parameter, as otherwise panletter will consider the
+parameter as an input file.
+'''
+                                )
+
+parser.add_argument('-o', '--output',
+                    help="""
+Output file name. If ommited, the first input's file name with .txt extension
+will be used.
+""",
+                    metavar='file')
+parser.add_argument('-c','--columns',
+                    help='chars per line, default=80',
+                    metavar='file')
+parser.add_argument('-p','--page',
+                    help='lines per page, recommended=60',
+                    metavar='file')
+parser.add_argument('-O','--overlay',
+                    help='overlay template, default dinover.md',
+                    metavar='file')
+parser.add_argument('-s','--ovlstart',
+                    help='overlay start, default=63',
+                    metavar='file')
+parser.add_argument('input',
+                    nargs='+',
+                    help='one or more input files',
+                    metavar='file')
+(files, options) = parser.parse_known_args()
+
+# If columns is not set, use 80
+if files.columns is None:
+  columns = 80
+else:
+  columns = int(files.columns)
+
+if files.page is None:
+  page = None
+else:
+  page = int(files.page)
+
+# If overlay is not set, use dinover.md
+if files.overlay is None:
+  overlay = 'dinover.md'
+else:
+  overlay = files.overlay
+
+# If ovlstart is not set, use columns - 18
+if files.ovlstart is None:
+  ovlstart = columns-18
+else:
+  ovlstart = int(files.ovlstart)
+
+# If output is not set, use first input file's name
+if files.output is None:
+  files.output = os.path.splitext(files.input[0])[0] + '.txt'
+
+# set current date as variable
+today = str(date.today())
+
+# Call pandoc for main letter
+os.spawnvp(os.P_WAIT,'pandoc', [
+                      'pandoc',
+                      '--strip-comments',
+                      '--template=dinbrief.md',
+                      '--columns='+str(columns),
+                      '--variable=today:'+today,
+                      '-o', '_'+files.output
+                    ] + options + files.input)
+
+# Call pandoc for overlay
+os.spawnvp(os.P_WAIT,'pandoc', [
+                      'pandoc',
+                      '--strip-comments',
+                      '--template='+overlay,
+                      '--variable=today:'+today,
+                      '-o', '_o_'+files.output
+                    ] + options + files.input)
+
+# merge files
+with open('_'+files.output,'r') as let, open('_o_'+files.output,'r') as ovl, open (files.output,'w') as out:
+  # strip 
+  lines = [line.rstrip('\\\n') for line in let]
+  lines_ovl = [line.rstrip('\\\n') for line in ovl]
+  i=0
+  while i < len(lines):
+    line = lines[i]
+    if i < len(lines_ovl):
+      line += lines_ovl[i]
+    line = line.expandtabs(ovlstart)
+    out.write(line+'\n')
+    i+=1
+    if page and ((i) % (page-1) == 0):
+      line = '( ' + str(int(i/(page-1))) + ' / ' + str(1+int((len(lines)-1)/(page-1))) + ' )' 
+      out.write(line.rjust(columns,' ')+'\n\f')
+  if page and not ((i) % (page-1) == 0):
+    out.write( ((page-1) - (i % (page-1)))*'\n' )
+    
+    line = '( ' + str(1+int(i/(page-1))) + ' / ' + str(1+int((len(lines)-1)/(page-1))) + ' )'
+    out.write(line.rjust(columns,' ')+'\n')
+  
