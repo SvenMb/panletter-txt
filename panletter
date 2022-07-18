@@ -32,22 +32,26 @@ parameter as an input file.
 
 parser.add_argument('-o', '--output',
                     help="""
-Output file name. If ommited, the first input's file name with .txt extension
+Output file name. If ommited,the first
+input's file name with .txt extension
 will be used.
 """,
                     metavar='file')
 parser.add_argument('-c','--columns',
                     help='chars per line, default=80',
-                    metavar='file')
+                    metavar='chars')
 parser.add_argument('-p','--page',
                     help='lines per page, recommended=60',
+                    metavar='lines')
+parser.add_argument('-t','--template',
+                    help='main template, default dinbrief.md',
                     metavar='file')
 parser.add_argument('-O','--overlay',
                     help='overlay template, default dinover.md',
                     metavar='file')
-parser.add_argument('-s','--ovlstart',
-                    help='overlay start, default=63',
-                    metavar='file')
+parser.add_argument('-T','--tab',
+                    help='tab expand, default=63',
+                    metavar='column')
 parser.add_argument('input',
                     nargs='+',
                     help='one or more input files',
@@ -65,17 +69,23 @@ if files.page is None:
 else:
   page = int(files.page)
 
+# If template is not set, use dinbrief.md
+if files.template is None:
+  template = 'dinbrief.md'
+else:
+  template = files.template
+
 # If overlay is not set, use dinover.md
 if files.overlay is None:
   overlay = 'dinover.md'
 else:
   overlay = files.overlay
 
-# If ovlstart is not set, use columns - 18
-if files.ovlstart is None:
+# If tab is not set, use columns - 18
+if files.tab is None:
   ovlstart = columns-18
 else:
-  ovlstart = int(files.ovlstart)
+  ovlstart = int(files.tab)
 
 # If output is not set, use first input file's name
 if files.output is None:
@@ -88,7 +98,7 @@ today = str(date.today())
 os.spawnvp(os.P_WAIT,'pandoc', [
                       'pandoc',
                       '--strip-comments',
-                      '--template=dinbrief.md',
+                      '--template='+template,
                       '--columns='+str(columns),
                       '--variable=today:'+today,
                       '-o', '_'+files.output
